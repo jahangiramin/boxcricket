@@ -1,0 +1,7 @@
+<h1>Match details - {{match.venue}} - {{match.date}}</h1>
+
+<ul>
+{% for player in match_players %}
+<li>{{player.player.name}}</li>
+{% endfor %}
+</ul>
