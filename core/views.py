@@ -4,7 +4,7 @@ from django.db.models import Sum
 from .models import Fund, Match, Match_player, Match_venue, Player, Team
 
 def index(request):
-    return render(request, 'home.html')
+    return render(request, 'main.html')
 
 def players(request):
     players = Player.objects.all()
