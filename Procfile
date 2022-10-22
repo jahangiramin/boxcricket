@@ -1,0 +1,1 @@
+web: gunicorn box_cricket.wsgi

@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-ek8s6m$x0(t(rf*0i-nl53y2*q6bmm0vwq$e&c%xmm8n2#f#-+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['boxcricket.herokuapp.com','127.0.0.1']
 
 
 # Application definition
