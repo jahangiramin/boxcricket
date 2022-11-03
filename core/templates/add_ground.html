@@ -1,0 +1,8 @@
+<form method="Post" action="/grounds/">
+    {% csrf_token %}
+    <label for="name">Ground name: </label><br>
+    <input type="text" id="name" name="name"><br>
+    <label for="address">Address</label><br>
+    <input type="text" id="address" name="address">
+    <input type="Submit" name="Submit" id="Submit">
+  </form>

@@ -1,0 +1,8 @@
+<form method="Post" action="/players/">
+    {% csrf_token %}
+    <label for="name">Player name: </label><br>
+    <input type="text" id="name" name="name"><br>
+    <label for="address">Number</label><br>
+    <input type="text" id="number" name="number">
+    <input type="Submit" name="Submit" id="Submit">
+  </form>

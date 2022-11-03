@@ -1,43 +1,47 @@
 from django.shortcuts import render
-from django.db.models import Sum
-
-from .models import Fund, Match, Match_player, Match_venue, Player, Team
+from .models import Player, Ground, Booking
 
 def index(request):
     return render(request, 'main.html')
 
-def players(request):
-    players = Player.objects.all()
-    context = {'players' : players}
-    return render(request, 'players.html', context)
-
-def teams(request):
-    teams = Team.objects.all()
-    context = {'teams' : teams}
-    return render(request, 'teams.html', context)
-
 def grounds(request):
-    grounds = Match_venue.objects.all()
-    context = {'grounds' : grounds}
-    return render(request, 'grounds.html', context)
+    if request.method == 'GET':
+        grounds = Ground.objects.all()
+        context = {'grounds' : grounds}
+        return render(request, 'grounds.html', context)
 
-def matches(request):
-    matches = Match.objects.all()
-    context = {'matches' : matches}
-    return render(request, 'matches.html', context)
+    elif request.method == "POST":
+        Ground.objects.create(
+            name = request.POST.get('name'),
+            address = request.POST.get('address')
+        )
+        grounds = Ground.objects.all()
+        context = {'grounds' : grounds}
+        return render(request, 'grounds.html', context)
 
-def match(request,pk):
-    match = Match.objects.get(id=pk)
-    match_players = Match_player.objects.filter(match=match)
-    context = {
-        'match' : match,
-        'match_players' : match_players,
-    }
-    return render(request, 'match.html', context)
 
-def funds(request):
-    funds = Player.objects.annotate(payable = Sum('fund__amount') - Sum('fund__amount_paid'))
-    context = {
-        'funds':funds
-    }
-    return render(request, 'funds.html' , context)
+def add_ground(request):
+    return render(request, 'add_ground.html')
+
+def players(request):
+    if request.method == 'GET':
+        players = Player.objects.all()
+        context = {'players' : players}
+        return render(request, 'players.html', context)
+
+    elif request.method == 'POST':
+        Player.objects.create(
+            name = request.POST.get('name'),
+            number = request.POST.get('number')
+        )
+        players = Player.objects.all()
+        context = {'players' : players}
+        return render(request, 'players.html', context)
+
+def add_player(request):
+    return render(request, 'add_player.html')
+
+def bookings(request):
+    bookings = Booking.objects.all()
+    context = {'booking' : booking}
+    return render(request, 'booking.html', context)
