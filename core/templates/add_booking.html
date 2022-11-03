@@ -1,0 +1,10 @@
+<form method="Post" action="/bookings/">
+    {% csrf_token %}
+    <label for="name">Date: </label><br>
+    <input type="text" id="date" name="date"><br>
+    <label for="address">Ground</label><br>
+    <input type="text" id="ground_id" name="ground_id">
+    <label for="address">Ground Fee</label><br>
+    <input type="text" id="fee" name="fee">
+    <input type="Submit" name="Submit" id="Submit">
+  </form>

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Player, Ground, Booking
+from .models import Player, Ground, Booking, Expense
 
 def index(request):
     return render(request, 'main.html')
@@ -42,6 +42,38 @@ def add_player(request):
     return render(request, 'add_player.html')
 
 def bookings(request):
-    bookings = Booking.objects.all()
-    context = {'booking' : booking}
-    return render(request, 'booking.html', context)
+    if request.method == 'GET':
+        bookings = Booking.objects.all()
+        context = {'bookings' : bookings}
+        return render(request, 'bookings.html', context)
+    elif request.method == 'POST':
+        ground = Ground.objects.get(id=request.POST.get('ground_id'))
+        Booking.objects.create(
+            date = request.POST.get('date'),
+            ground = ground,
+            amount = request.POST.get('fee'),
+        )
+        bookings = Booking.objects.all()
+        context = {'bookings' : bookings}
+        return render(request, 'bookings.html', context)
+
+def add_booking(request):
+    return render(request, 'add_booking.html')
+
+def expenses(request):
+    if request.method == 'GET':
+        expenses = Expense.objects.all()
+        context = {'expenses' : expenses}
+        return render(request, 'expenses.html', context)
+    elif request.method == 'POST':
+        Expense.objects.create(
+            date = request.POST.get('date'),
+            name = request.POST.get('name'),
+            amount = request.POST.get('amount'),
+        )
+        expenses = Expense.objects.all()
+        context = {'expenses' : expenses}
+        return render(request, 'expenses.html', context)
+
+def add_expense(request):
+    return render(request, 'add_expense.html')

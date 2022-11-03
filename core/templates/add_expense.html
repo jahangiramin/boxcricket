@@ -1,0 +1,10 @@
+<form method="Post" action="/expenses/">
+    {% csrf_token %}
+    <label for="name">Date: </label><br>
+    <input type="text" id="date" name="date"><br>
+    <label for="address">Name</label><br>
+    <input type="text" id="name" name="name">
+    <label for="address">Amount</label><br>
+    <input type="text" id="amount" name="amount">
+    <input type="Submit" name="Submit" id="Submit">
+  </form>
