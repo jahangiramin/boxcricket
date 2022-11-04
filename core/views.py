@@ -2,7 +2,7 @@ from django.shortcuts import render
 from .models import Player, Ground, Booking, Expense
 
 def index(request):
-    return render(request, 'main.html')
+    return render(request, 'home.html')
 
 def grounds(request):
     if request.method == 'GET':
@@ -32,7 +32,8 @@ def players(request):
     elif request.method == 'POST':
         Player.objects.create(
             name = request.POST.get('name'),
-            number = request.POST.get('number')
+            number = request.POST.get('number'),
+            tagline = request.POST.get('tagline')
         )
         players = Player.objects.all()
         context = {'players' : players}

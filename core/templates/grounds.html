@@ -1,6 +1,35 @@
-<h1>Grounds</h1>
-<ul>
-{% for ground in grounds %}
-<li>{{ground.name}}</li>
-{% endfor %}
-</ul>
+{% extends 'main.html' %}
+
+{% block main %}
+
+<div class="bg-white shadow rounded-lg mb-4 p-4 sm:p-6 h-full">
+    <div class="flex items-center justify-between mb-4">
+        <h3 class="text-xl font-bold leading-none text-gray-900">Grounds</h3>
+        <a href={% url 'add_ground' %} class="text-sm font-medium text-cyan-600 hover:bg-gray-100 rounded-lg inline-flex items-center p-2">
+        Add new
+        </a>
+    </div>
+    <div class="flow-root">
+        <ul role="list" class="divide-y divide-gray-200">
+            {% for ground in grounds %}
+                <li class="py-3 sm:py-4">
+                    <div class="flex items-center space-x-4">
+                        <div class="flex-shrink-0">
+                            <img class="h-8 w-8 rounded-full" src="https://demo.themesberg.com/windster/images/users/neil-sims.png" alt="Neil image">
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-medium text-gray-900 truncate">
+                                {{ground.name}}
+                            </p>
+                            <p class="text-sm text-gray-500 truncate">
+                                {{ground.address}}
+                            </p>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+{% endblock main %}
