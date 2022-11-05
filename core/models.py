@@ -23,11 +23,23 @@ class Booking(models.Model):
     def __str__(self):
         return str(self.ground.name) + ' - ' + str(self.date)
 
+    @property
+    def name(self):
+        return str(self.ground.name)
+
 class Booking_Player(models.Model):
     booking = models.ForeignKey(Booking, on_delete=models.CASCADE)
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
     amount = models.IntegerField()
+    date = models.DateField()
     fee_paid = models.BooleanField()
+
+    def __str__(self):
+        return str(self.player.name)
+    
+    @property
+    def name(self):
+        return str(self.player.name)
 
 class Expense(models.Model):
     date = models.DateField()

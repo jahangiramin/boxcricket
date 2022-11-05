@@ -114,7 +114,7 @@ def expenses(request):
         Expense.objects.create(
             date = request.POST.get('date'),
             name = request.POST.get('name'),
-            amount = request.POST.get('amount'),
+            amount = min(request.POST.get('amount')),
         )
         expenses = Expense.objects.all()
         context = {'expenses' : expenses}
@@ -124,7 +124,7 @@ def add_expense(request):
     return render(request, 'add_expense.html')
 
 def funds(request):
-    expenses = Expense.objects.all()
+    expenses = Expense.objects.all()    
     expenses_sum = expenses.aggregate(Sum('amount'))
 
     booking_fees = Booking.objects.all()
@@ -134,14 +134,15 @@ def funds(request):
     player_contributions_sum = player_contributions.aggregate(Sum('amount'))
 
     balance = player_contributions_sum['amount__sum'] - booking_fees_sum['amount__sum'] - expenses_sum['amount__sum']
-    print(balance)
 
     transactions = []
 
     for expense in expenses:
+        expense.amount = expense.amount * -1
         transactions.append(expense)
     
     for booking_fee in booking_fees:
+        booking_fee.amount = booking_fee.amount * -1
         transactions.append(booking_fee)
 
     for player_contribution in player_contributions:
