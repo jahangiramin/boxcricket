@@ -26,13 +26,14 @@ class Booking(models.Model):
 class Booking_Player(models.Model):
     booking = models.ForeignKey(Booking, on_delete=models.CASCADE)
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
-    fee = models.IntegerField()
+    amount = models.IntegerField()
     fee_paid = models.BooleanField()
 
 class Expense(models.Model):
     date = models.DateField()
     name = models.CharField(max_length=200)
     amount = models.IntegerField()
+
 
 
 

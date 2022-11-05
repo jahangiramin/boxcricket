@@ -9,8 +9,8 @@
     <div class="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8 ">
         <div class="flex items-center">
             <div class="flex-shrink-0">
-                <span class="text-2xl sm:text-3xl leading-none font-bold text-gray-900">Rs. {{expense_sum.amount__sum|intcomma }}</span>
-                <h3 class="text-base font-normal text-gray-500">Total expenses</h3>
+                <span class="text-2xl sm:text-3xl leading-none font-bold text-gray-900">Rs.{{balance|intcomma}}</span>
+                <h3 class="text-base font-normal text-gray-500">Fund balance</h3>
             </div>
         </div>
     </div>
@@ -23,11 +23,8 @@
 <div class="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8">
     <div class="mb-4 flex items-center justify-between">
         <div>
-            <h3 class="text-xl font-bold text-gray-900 mb-2">Expenses</h3>
-            <span class="text-base font-normal text-gray-500">This is a list of all expenses incurred</span>
-        </div>
-        <div class="flex-shrink-0">
-            <a href={% url 'add_expense' %} class="text-sm font-medium text-cyan-600 hover:bg-gray-100 rounded-lg p-2">Add new</a>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Fund movement</h3>
+            <span class="text-base font-normal text-gray-500">Fund movement details</span>
         </div>
     </div>
     <div class="flex flex-col mt-8">
@@ -38,7 +35,7 @@
                     <thead class="bg-gray-50">
                         <tr>
                         <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Expense datails
+                            Transaction datails
                         </th>
                         <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Date & Time
@@ -49,18 +46,19 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white">
-                        {% for expense in expenses %}
-                            <tr>
-                                <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-900">
-                                    {{expense.name}}
-                                </td>
-                                <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
-                                    {{expense.date}}
-                                </td>
-                                <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                    Rs. {{expense.amount|intcomma}}
-                                </td>
-                            </tr>
+                        {% for transaction in transactions %}
+                        <tr>
+                            <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-900">
+                                {{transaction.name}}
+                            </td>
+                            <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
+                                {{transaction.date}}
+                            </td>
+
+                            <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
+                                Rs. {{transaction.amount|intcomma}}
+                            </td>
+                        </tr>
                         {% endfor %}
                     </tbody>
                 </table>
@@ -71,7 +69,3 @@
 </div>
 
 {% endblock main %}
-
-
-
-

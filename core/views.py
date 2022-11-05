@@ -1,5 +1,7 @@
 from django.shortcuts import render
-from .models import Player, Ground, Booking, Expense
+from .models import Player, Ground, Booking, Expense, Booking_Player
+from django.db.models import Sum
+
 
 def index(request):
     return render(request, 'home.html')
@@ -48,24 +50,66 @@ def bookings(request):
         context = {'bookings' : bookings}
         return render(request, 'bookings.html', context)
     elif request.method == 'POST':
-        ground = Ground.objects.get(id=request.POST.get('ground_id'))
+        ground = Ground.objects.get(id=request.POST.get('ground'))
         Booking.objects.create(
             date = request.POST.get('date'),
             ground = ground,
-            amount = request.POST.get('fee'),
+            amount = request.POST.get('amount'),
         )
         bookings = Booking.objects.all()
         context = {'bookings' : bookings}
         return render(request, 'bookings.html', context)
 
 def add_booking(request):
-    return render(request, 'add_booking.html')
+    grounds = Ground.objects.all()
+    context = {
+        'grounds' : grounds
+    }
+    return render(request, 'add_booking.html', context)
+
+def booking_players(request, pk):
+    if request.method =='GET':
+        booking = Booking.objects.get(id=pk)
+        context = {
+            'booking' : booking
+        }
+
+        return render(request, 'booking_players.html', context)
+    elif request.method == 'POST':
+        booking = Booking.objects.get(id = pk)
+        player = Player.objects.get(id = request.POST.get('player'))
+        Booking_Player.objects.create(
+            booking = booking,
+            player = player,
+            amount = request.POST.get('amount'),
+            fee_paid = request.POST.get('fee_paid')
+        )
+        booking = Booking.objects.get(id=pk)
+        context = {
+            'booking' : booking
+        }
+        return render(request, 'booking_players.html', context)
+
+def add_booking_players(request, pk):
+    booking = Booking.objects.get(id=pk)
+    players = Player.objects.all()
+    context = {
+        'booking' : booking,
+        'players' : players
+    }
+    return render(request, 'add_booking_players.html', context)
 
 def expenses(request):
     if request.method == 'GET':
         expenses = Expense.objects.all()
-        context = {'expenses' : expenses}
+        expense_sum = expenses.aggregate(Sum('amount'))
+        print(expense_sum)
+        context = {
+            'expenses' : expenses,
+            'expense_sum': expense_sum
+        }
         return render(request, 'expenses.html', context)
+
     elif request.method == 'POST':
         Expense.objects.create(
             date = request.POST.get('date'),
@@ -78,3 +122,34 @@ def expenses(request):
 
 def add_expense(request):
     return render(request, 'add_expense.html')
+
+def funds(request):
+    expenses = Expense.objects.all()
+    expenses_sum = expenses.aggregate(Sum('amount'))
+
+    booking_fees = Booking.objects.all()
+    booking_fees_sum = booking_fees.aggregate(Sum('amount'))
+
+    player_contributions = Booking_Player.objects.filter(fee_paid='True')
+    player_contributions_sum = player_contributions.aggregate(Sum('amount'))
+
+    balance = player_contributions_sum['amount__sum'] - booking_fees_sum['amount__sum'] - expenses_sum['amount__sum']
+    print(balance)
+
+    transactions = []
+
+    for expense in expenses:
+        transactions.append(expense)
+    
+    for booking_fee in booking_fees:
+        transactions.append(booking_fee)
+
+    for player_contribution in player_contributions:
+        transactions.append(player_contribution)
+
+    context = {
+        'transactions' : transactions,
+        'balance' : balance
+    }
+
+    return render(request, 'funds.html', context)

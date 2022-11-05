@@ -1,10 +1,12 @@
 {% extends 'main.html' %}
 
+{% load humanize %}
+
 {% block main %}
 
 <div class="bg-white shadow rounded-lg mb-4 p-4 sm:p-6 h-full">
     <div class="flex items-center justify-between mb-4">
-        <h3 class="text-xl font-bold leading-none text-gray-900">Grounds</h3>
+        <h3 class="text-xl font-bold leading-none text-gray-900">Bookings</h3>
         <a href={% url 'add_booking' %} class="text-sm font-medium text-cyan-600 hover:bg-gray-100 rounded-lg inline-flex items-center p-2">
         Add new
         </a>
@@ -13,22 +15,24 @@
         <ul role="list" class="divide-y divide-gray-200">
             {% for booking in bookings %}
                 <li class="py-3 sm:py-4">
-                    <div class="flex items-center space-x-4">
-                        <div class="flex-shrink-0">
-                            <img class="h-8 w-8 rounded-full" src="https://demo.themesberg.com/windster/images/users/neil-sims.png" alt="Neil image">
+                    <a href={% url 'booking_players' pk=booking.id %}>
+                        <div class="flex items-center space-x-4">
+                            <div class="flex-shrink-0">
+                                <img class="h-8 w-8 rounded-full" src="https://demo.themesberg.com/windster/images/users/neil-sims.png" alt="Neil image">
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-900 truncate">
+                                    {{booking.date}}
+                                </p>
+                                <p class="text-sm text-gray-500 truncate">
+                                    {{booking.ground}}
+                                </p>
+                            </div>
+                            <div class="inline-flex items-center text-base font-semibold text-gray-900">
+                                Rs. {{booking.amount|intcomma}}
+                            </div>
                         </div>
-                        <div class="flex-1 min-w-0">
-                            <p class="text-sm font-medium text-gray-900 truncate">
-                                {{booking.date}}
-                            </p>
-                            <p class="text-sm text-gray-500 truncate">
-                                {{booking.ground}}
-                            </p>
-                        </div>
-                        <div class="inline-flex items-center text-base font-semibold text-gray-900">
-                            {{booking.amount}}
-                        </div>
-                    </div>
+                    </a>
                 </li>
             {% endfor %}
         </ul>
