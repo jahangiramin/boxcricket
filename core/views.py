@@ -154,3 +154,15 @@ def funds(request):
     }
 
     return render(request, 'funds.html', context)
+
+
+def pending_contributions(request):
+    players = Booking_Player.objects.filter(fee_paid="False").values('player__name').annotate(total_amount=Sum('amount'))
+    for player in players:
+        print(player)
+    balance = players.aggregate(Sum('amount'))
+    context = {
+        'players' : players,
+        'balance' : balance
+    }
+    return render(request, 'pending_contributions.html', context)
