@@ -9,8 +9,8 @@
     <div class="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8 ">
         <div class="flex items-center">
             <div class="flex-shrink-0">
-                <span class="text-2xl sm:text-3xl leading-none font-bold text-gray-900">Rs.{{balance.total_amount__sum|intcomma}}</span>
-                <h3 class="text-base font-normal text-gray-500">Total pending contributions</h3>
+                <span class="text-2xl sm:text-3xl leading-none font-bold text-gray-900">{{player.name}}</span>
+                <h3 class="text-base font-normal text-gray-500">Pending contributions: Rs.{{balance.amount__sum|intcomma}}</h3>
             </div>
         </div>
     </div>
@@ -35,21 +35,31 @@
                     <thead class="bg-gray-50">
                         <tr>
                         <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Player name
+                            Match date
                         </th>
                         <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Amount
                         </th>
+                        <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Actions
+                        </th>
                         </tr>
                     </thead>
                     <tbody class="bg-white">
-                        {% for player in players %}
+                        {% for match in pending_contributions %}
+                        
                             <tr>
                                 <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-900">
-                                    <a href = {% url 'pending_contributions_player' pk=player.id %}> {{player.name}} </a>
+                                    {{match.date}}
                                 </td>
                                 <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                    <a href = {% url 'pending_contributions_player' pk=player.id %}> Rs. {{player.total_amount|intcomma}} </a>
+                                    Rs. {{match.amount|intcomma}}
+                                </td>
+                                <td class="p-4 text-sm font-semibold">
+                                    <a href={% url 'fee_status_change' pk=match.id %}><button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                        Mark as paid
+                                    </button>
+                                </a>
                                 </td>
                             </tr>
                         {% endfor %}

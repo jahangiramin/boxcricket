@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Player, Ground, Booking, Expense, Booking_Player
 from django.db.models import Sum
 
@@ -157,12 +157,34 @@ def funds(request):
 
 
 def pending_contributions(request):
-    players = Booking_Player.objects.filter(fee_paid="False").values('player__name').annotate(total_amount=Sum('amount'))
-    for player in players:
-        print(player)
-    balance = players.aggregate(Sum('amount'))
+    #players = Booking_Player.objects.filter(fee_paid="False").values('player__name').annotate(total_amount=Sum('amount'))
+    players = Player.objects.filter(booking_player__fee_paid="False").annotate(total_amount=Sum('booking_player__amount'))
+    balance = players.aggregate(Sum('total_amount'))
     context = {
         'players' : players,
         'balance' : balance
     }
     return render(request, 'pending_contributions.html', context)
+
+def pending_contributions_player(request, pk):
+    player = Player.objects.get(id=pk)
+    balance = Booking_Player.objects.filter(player=player, fee_paid="False").aggregate(Sum('amount'))
+    pending_contributions = Booking_Player.objects.filter(player=player, fee_paid='False')
+
+    context = {
+        'pending_contributions' :pending_contributions,
+        'player' : player,
+        'balance' : balance,
+    }
+
+    return render(request, 'pending_contributions_player.html', context)
+
+def fee_status_change(request, pk):
+    fee = Booking_Player.objects.get(id=pk)
+    if fee.fee_paid == False:
+        fee.fee_paid = True
+        fee.save()
+        
+    player = fee.player
+
+    return redirect('pending_contributions_player' , pk=player.id)

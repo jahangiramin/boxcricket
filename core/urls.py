@@ -15,4 +15,6 @@ urlpatterns = [
     path('add-expense/', views.add_expense, name='add_expense'),
     path('funds/', views.funds, name='funds'),
     path('pending-contributions', views.pending_contributions, name='pending_contributions'),
+    path('pending-contributions/<str:pk>', views.pending_contributions_player, name='pending_contributions_player'),
+    path('fee-status-change/<str:pk>', views.fee_status_change, name='fee_status_change'),
 ]
