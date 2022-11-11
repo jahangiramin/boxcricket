@@ -17,4 +17,6 @@ urlpatterns = [
     path('pending-contributions', views.pending_contributions, name='pending_contributions'),
     path('pending-contributions/<str:pk>', views.pending_contributions_player, name='pending_contributions_player'),
     path('fee-status-change/<str:pk>', views.fee_status_change, name='fee_status_change'),
+    path('login', views.login_user, name='login'),
+    path('logout', views.logout_user, name='logout'),
 ]

@@ -1,11 +1,15 @@
 from django.shortcuts import render, redirect
 from .models import Player, Ground, Booking, Expense, Booking_Player
 from django.db.models import Sum
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
-
+@login_required(login_url='login')
 def index(request):
     return render(request, 'home.html')
 
+@login_required(login_url='login')
 def grounds(request):
     if request.method == 'GET':
         grounds = Ground.objects.all()
@@ -21,10 +25,11 @@ def grounds(request):
         context = {'grounds' : grounds}
         return render(request, 'grounds.html', context)
 
-
+@login_required(login_url='login')
 def add_ground(request):
     return render(request, 'add_ground.html')
 
+@login_required(login_url='login')
 def players(request):
     if request.method == 'GET':
         players = Player.objects.all()
@@ -41,9 +46,11 @@ def players(request):
         context = {'players' : players}
         return render(request, 'players.html', context)
 
+@login_required(login_url='login')
 def add_player(request):
     return render(request, 'add_player.html')
 
+@login_required(login_url='login')
 def bookings(request):
     if request.method == 'GET':
         bookings = Booking.objects.all()
@@ -60,6 +67,7 @@ def bookings(request):
         context = {'bookings' : bookings}
         return render(request, 'bookings.html', context)
 
+@login_required(login_url='login')
 def add_booking(request):
     grounds = Ground.objects.all()
     context = {
@@ -67,6 +75,7 @@ def add_booking(request):
     }
     return render(request, 'add_booking.html', context)
 
+@login_required(login_url='login')
 def booking_players(request, pk):
     if request.method =='GET':
         booking = Booking.objects.get(id=pk)
@@ -90,6 +99,7 @@ def booking_players(request, pk):
         }
         return render(request, 'booking_players.html', context)
 
+@login_required(login_url='login')
 def add_booking_players(request, pk):
     booking = Booking.objects.get(id=pk)
     players = Player.objects.all()
@@ -99,6 +109,7 @@ def add_booking_players(request, pk):
     }
     return render(request, 'add_booking_players.html', context)
 
+@login_required(login_url='login')
 def expenses(request):
     if request.method == 'GET':
         expenses = Expense.objects.all()
@@ -120,9 +131,11 @@ def expenses(request):
         context = {'expenses' : expenses}
         return render(request, 'expenses.html', context)
 
+@login_required(login_url='login')
 def add_expense(request):
     return render(request, 'add_expense.html')
 
+@login_required(login_url='login')
 def funds(request):
     expenses = Expense.objects.all()    
     expenses_sum = expenses.aggregate(Sum('amount'))
@@ -156,6 +169,7 @@ def funds(request):
     return render(request, 'funds.html', context)
 
 
+@login_required(login_url='login')
 def pending_contributions(request):
     #players = Booking_Player.objects.filter(fee_paid="False").values('player__name').annotate(total_amount=Sum('amount'))
     players = Player.objects.filter(booking_player__fee_paid="False").annotate(total_amount=Sum('booking_player__amount'))
@@ -166,6 +180,7 @@ def pending_contributions(request):
     }
     return render(request, 'pending_contributions.html', context)
 
+@login_required(login_url='login')
 def pending_contributions_player(request, pk):
     player = Player.objects.get(id=pk)
     balance = Booking_Player.objects.filter(player=player, fee_paid="False").aggregate(Sum('amount'))
@@ -179,6 +194,7 @@ def pending_contributions_player(request, pk):
 
     return render(request, 'pending_contributions_player.html', context)
 
+@login_required(login_url='login')
 def fee_status_change(request, pk):
     fee = Booking_Player.objects.get(id=pk)
     if fee.fee_paid == False:
@@ -188,3 +204,24 @@ def fee_status_change(request, pk):
     player = fee.player
 
     return redirect('pending_contributions_player' , pk=player.id)
+
+def login_user(request):
+    if request.user.is_authenticated:
+        return redirect('home')
+    else:
+        if request.method == 'POST':
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            user = authenticate(request, username=username, password=password)
+
+            if user is not None:
+                login(request, user)
+                return redirect('home')
+            else:
+                messages.info(request, 'Invalid credentials')
+
+        return render(request, 'login.html')
+
+def logout_user(request):
+    logout(request)
+    return redirect('login')
