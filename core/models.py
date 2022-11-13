@@ -31,7 +31,7 @@ class Booking_Player(models.Model):
     booking = models.ForeignKey(Booking, on_delete=models.CASCADE)
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
     amount = models.IntegerField()
-    date = models.DateField()
+    date = models.DateField(null=True, blank=True)
     fee_paid = models.BooleanField()
 
     def __str__(self):

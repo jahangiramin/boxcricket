@@ -40,9 +40,11 @@
                         <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Amount
                         </th>
+                        {% if user.is_authenticated %}
                         <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Actions
                         </th>
+                        {% endif %}
                         </tr>
                     </thead>
                     <tbody class="bg-white">
@@ -55,12 +57,14 @@
                                 <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
                                     Rs. {{match.amount|intcomma}}
                                 </td>
+                                {% if user.is_authenticated %}
                                 <td class="p-4 text-sm font-semibold">
                                     <a href={% url 'fee_status_change' pk=match.id %}><button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                         Mark as paid
                                     </button>
                                 </a>
                                 </td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                     </tbody>

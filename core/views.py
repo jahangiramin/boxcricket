@@ -169,7 +169,6 @@ def funds(request):
     return render(request, 'funds.html', context)
 
 
-@login_required(login_url='login')
 def pending_contributions(request):
     #players = Booking_Player.objects.filter(fee_paid="False").values('player__name').annotate(total_amount=Sum('amount'))
     players = Player.objects.filter(booking_player__fee_paid="False").annotate(total_amount=Sum('booking_player__amount'))
@@ -180,7 +179,6 @@ def pending_contributions(request):
     }
     return render(request, 'pending_contributions.html', context)
 
-@login_required(login_url='login')
 def pending_contributions_player(request, pk):
     player = Player.objects.get(id=pk)
     balance = Booking_Player.objects.filter(player=player, fee_paid="False").aggregate(Sum('amount'))
@@ -225,3 +223,4 @@ def login_user(request):
 def logout_user(request):
     logout(request)
     return redirect('login')
+    
